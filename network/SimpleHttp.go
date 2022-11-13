@@ -5,21 +5,34 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"sync"
+	"sync/atomic"
 )
 
-func StartSimpleHttpServer(ctx context.Context, addr string) {
-	var count int64 = 0
+type appState struct {
+	atomic.Int64
+}
+
+func createAppState() *appState {
+	ins := appState{}
+	ins.Store(0)
+	return &ins
+}
+
+func StartSimpleHttpServer(ctx context.Context, wg *sync.WaitGroup, addr string) {
+	appState := createAppState()
+
 	http.HandleFunc("/count", func(res http.ResponseWriter, req *http.Request) {
 
 		switch req.Method {
 		case "GET":
 			res.WriteHeader(200)
-			res.Write([]byte(fmt.Sprintf("%d", count)))
+			res.Write([]byte(fmt.Sprintf("%d", appState.Load())))
 			return
 		case "POST":
-			count += 1
+			appState.Add(1)
 			res.WriteHeader(201)
-			res.Write([]byte(fmt.Sprintf("%d", count)))
+			res.Write([]byte(fmt.Sprintf("%d", appState.Load())))
 			return
 		default:
 			res.WriteHeader(404)
@@ -33,6 +46,9 @@ func StartSimpleHttpServer(ctx context.Context, addr string) {
 	httpServer := http.Server{
 		Addr: addr,
 	}
+
+	wg.Add(1)
+	defer wg.Done()
 
 	go func() {
 		<-ctx.Done()

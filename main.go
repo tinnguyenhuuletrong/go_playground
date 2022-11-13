@@ -5,15 +5,16 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
-	"time"
+	"sync"
 
 	"ttin.com/play2022/network"
 )
 
 func main() {
-
-	ctx, cancel := context.WithCancel(context.Background())
-	go network.StartSimpleHttpServer(ctx, ":8080")
+	var wg sync.WaitGroup
+	ctx := context.Background()
+	ctx, cancel := context.WithCancel(ctx)
+	go network.StartSimpleHttpServer(ctx, &wg, ":8080")
 
 	// wait for interupt
 	sigint := make(chan os.Signal, 1)
@@ -21,6 +22,5 @@ func main() {
 	<-sigint
 	fmt.Println("Stoping...")
 	cancel()
-
-	time.Sleep(2 * time.Second)
+	wg.Wait()
 }
