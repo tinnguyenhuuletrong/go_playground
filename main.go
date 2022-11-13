@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"os"
 	"os/signal"
@@ -11,10 +12,14 @@ import (
 )
 
 func main() {
+	var httpAddress = flag.String("addr", ":8080", "http address. Example :8080")
+	flag.Parse()
+	println("Options:\n -httpAddress:", *httpAddress)
+
 	var wg sync.WaitGroup
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
-	go network.StartSimpleHttpServer(ctx, &wg, ":8080")
+	go network.StartSimpleHttpServer(ctx, &wg, *httpAddress)
 
 	// wait for interupt
 	sigint := make(chan os.Signal, 1)
