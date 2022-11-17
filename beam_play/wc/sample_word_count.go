@@ -53,7 +53,7 @@
 // The input file defaults to a public data set containing the text of King
 // Lear by William Shakespeare. You can override it and choose your own input
 // with --input.
-package beam_play
+package beam_play_wc
 
 // beam-playground:
 //   name: WordCount
@@ -83,6 +83,7 @@ import (
 	"github.com/apache/beam/sdks/v2/go/pkg/beam/io/textio"
 	"github.com/apache/beam/sdks/v2/go/pkg/beam/register"
 	"github.com/apache/beam/sdks/v2/go/pkg/beam/transforms/stats"
+	"github.com/apache/beam/sdks/v2/go/pkg/beam/transforms/top"
 	"github.com/apache/beam/sdks/v2/go/pkg/beam/x/beamx"
 	"github.com/apache/beam/sdks/v2/go/pkg/beam/x/debug"
 )
@@ -143,6 +144,9 @@ func init() {
 	register.Emitter1[string]()
 
 	register.Function1x1(strings.ToLower)
+	register.Function2x1(getCount)
+	register.Function2x1(mapToPair)
+
 }
 
 var (
@@ -217,7 +221,31 @@ func CountWords(s beam.Scope, lines beam.PCollection) beam.PCollection {
 	return res
 }
 
-func Start() {
+type countPair struct {
+	k string
+	v int
+}
+
+func (cp countPair) String() string {
+	return fmt.Sprintf("%s: %v", cp.k, cp.v)
+}
+
+func lessByCount(a, b countPair) bool {
+	return a.v < b.v
+}
+
+func getCount(w string, c int) int {
+	return c
+}
+
+func mapToPair(w string, c int) countPair {
+	return countPair{
+		k: w,
+		v: c,
+	}
+}
+
+func StartWc() {
 	// If beamx or Go flags are used, flags must be parsed first.
 	flag.Parse()
 	// beam.Init() is an initialization hook that must be called on startup. On
@@ -237,6 +265,18 @@ func Start() {
 	counted := CountWords(s, lines)
 	formatted := beam.ParDo(s, formatFn, counted)
 	textio.Write(s, *output, formatted)
+
+	/* stats */
+	valueOnly := beam.ParDo(s, getCount, counted)
+	debug.Printf(s, "Max: %v", stats.Max(s, valueOnly))
+	debug.Printf(s, "Min: %v", stats.Min(s, valueOnly))
+
+	pairs := beam.ParDo(s, mapToPair, counted)
+	top3 := top.Largest(s, pairs, 3, lessByCount)
+	debug.Printf(s, "Top 3: %+v", top3)
+
+	less3 := top.Smallest(s, pairs, 3, lessByCount)
+	debug.Printf(s, "Less 3: %+v", less3)
 
 	// Concept #1: The beamx.Run convenience wrapper allows a number of
 	// pre-defined runners to be used via the --runner flag.

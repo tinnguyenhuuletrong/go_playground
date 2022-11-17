@@ -4,5 +4,6 @@ import "ttin.com/play2022/beam_play"
 
 func main() {
 	// network.Play()
-	beam_play.Play()
+	// beam_play.Play_StatsGrade()
+	beam_play.Play_WordCount()
 }
