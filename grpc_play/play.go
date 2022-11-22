@@ -88,23 +88,23 @@ func Grpc_Twirp_HTTP_Client(wg *sync.WaitGroup) {
 	wg.Add(1)
 	defer wg.Done()
 
+	// CURL clone
+	// curl --location --request POST 'http://localhost:8000/twirp/play2022.grpc_play.notes.NotesService/GetAllNotes' --header 'Content-Type: application/json' --data-raw '{}'
+
 	httpClient := http.Client{}
 	ctx := context.Background()
 
 	client := notes.NewNotesServiceProtobufClient("http://localhost:8000", &httpClient)
-
 	tmp, err := client.CreateNote(ctx, &notes.CreateNoteParams{Text: "Hello World 1"})
 	log.Println("CreatedNote:", err, tmp)
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	tmp, err = client.CreateNote(ctx, &notes.CreateNoteParams{Text: "Hello World 2"})
 	log.Println("CreatedNote:", err, tmp)
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	tmpNotes, err := client.GetAllNotes(ctx, &notes.GetAllNotesParams{})
 	log.Println("ListNotes:", err, tmpNotes)
 	if err != nil {
