@@ -9,3 +9,9 @@ test:
 
 run_beam_wc: build
 	./bin/app --input gs://dataflow-samples/shakespeare/kinglear.txt --output outputs
+
+build_protoc:
+	# Need install first
+	# $ go install github.com/twitchtv/twirp/protoc-gen-twirp@latest
+	# $ go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+	protoc --twirp_out=./ --go_out=./ ./grpc_play/notes/service.proto
