@@ -1,6 +1,6 @@
 package main
 
-import "ttin.com/play2022/grpc_play"
+import "ttin.com/play2022/faninout"
 
 func main() {
 	// network.Play()
@@ -9,5 +9,7 @@ func main() {
 	// beam_play.Play_GroupBy()
 	// beam_play.Play_CombineSum()
 
-	grpc_play.Play_Grpc_Twirp()
+	// grpc_play.Play_Grpc_Twirp()
+
+	faninout.Play_FanInOut()
 }
