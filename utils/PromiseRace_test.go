@@ -7,61 +7,52 @@ import (
 	"math/rand"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
-func TestPromiseAll1(t *testing.T) {
-
-	inputs := []float64{1, 2, 3, 4}
-	process := func(inp float64) float64 {
-		return math.Pow(inp, 2)
-	}
-
-	all_res, err := PromiseAll(inputs, process)
-
-	t.Log(all_res)
-	t.Log(err)
-}
-
-func TestPromiseAll2(t *testing.T) {
+func TestPromiseRace1(t *testing.T) {
 
 	rand.Seed(0)
 
 	inputs := []float64{1, 2, 3, 4}
 	process := func(inp float64) float64 {
-		sleepDuration := time.Duration(math.Ceil((rand.Float64())*5) * float64(time.Second))
+		sleepDuration := time.Duration(inp * float64(time.Second))
 		log.Println(sleepDuration)
 		time.Sleep(sleepDuration)
-		return math.Exp(inp)
+		return inp
 	}
 
-	all_res, err := PromiseAll(inputs, process)
+	final_res, err := PromiseRace(inputs, process)
 
-	t.Log(all_res)
+	assert.Equal(t, final_res, float64(1))
+	t.Log(final_res)
 	t.Log(err)
+
+	// check no panic b/c sent to close channel
+	time.Sleep(5 * time.Second)
 }
 
-func TestPromiseAll3(t *testing.T) {
+func TestPromiseRace2(t *testing.T) {
 
 	rand.Seed(0)
 
-	inputs := []float64{1, 2, 3, 4}
+	inputs := []float64{4, 3, 2, 1}
 	process := func(inp float64) float64 {
-		if inp == 2 {
-			panic("🤖 i don't like number 4 🤖")
-		}
-		sleepDuration := time.Duration(math.Ceil((rand.Float64())*5) * float64(time.Second))
+		sleepDuration := time.Duration(inp * float64(time.Second))
 		log.Println(sleepDuration)
 		time.Sleep(sleepDuration)
-		return math.Exp(inp)
+		return inp
 	}
 
-	all_res, err := PromiseAll(inputs, process)
+	final_res, err := PromiseRace(inputs, process)
 
-	t.Log(all_res)
+	assert.Equal(t, final_res, float64(1))
+	t.Log(final_res)
 	t.Log(err)
 }
 
-func TestPromiseAllWithContext1(t *testing.T) {
+func TestPromiseRaceWithContext1(t *testing.T) {
 	rand.Seed(0)
 
 	inputs := []float64{1, 2, 3, 4}
@@ -70,13 +61,13 @@ func TestPromiseAllWithContext1(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	all_res, err := PromiseAllWithCtx(ctx, inputs, process)
+	all_res, err := PromiseRaceWithCtx(ctx, inputs, process)
 
 	t.Log(all_res)
 	t.Log(err)
 }
 
-func TestPromiseAllWithContext2(t *testing.T) {
+func TestPromiseRaceWithContext2(t *testing.T) {
 	rand.Seed(0)
 
 	inputs := []float64{1, 2, 3, 4}
