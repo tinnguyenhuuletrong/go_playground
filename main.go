@@ -1,6 +1,6 @@
 package main
 
-import "ttin.com/play2022/faninout"
+import networktcp "ttin.com/play2022/network_tcp"
 
 func main() {
 	// network.Play()
@@ -11,5 +11,7 @@ func main() {
 
 	// grpc_play.Play_Grpc_Twirp()
 
-	faninout.Play_FanInOut()
+	// faninout.Play_FanInOut()
+
+	networktcp.CreateTCPServer("localhost:3000")
 }
