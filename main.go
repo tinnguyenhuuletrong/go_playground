@@ -1,6 +1,6 @@
 package main
 
-import networktcp "ttin.com/play2022/network_tcp"
+import networktcp "ttin.com/play2022/network_tcp/play"
 
 func main() {
 	// network.Play()
@@ -13,5 +13,5 @@ func main() {
 
 	// faninout.Play_FanInOut()
 
-	networktcp.CreateTCPServer("localhost:3000")
+	networktcp.PlayTcpChannel()
 }
