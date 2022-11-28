@@ -1,7 +1,7 @@
 package main
 
 import (
-	channelplay "ttin.com/play2022/channel_play"
+	memlog_play "ttin.com/play2022/memlog_play"
 )
 
 func main() {
@@ -16,5 +16,6 @@ func main() {
 	// faninout.Play_FanInOut()
 
 	// networktcp.PlayTcpChannel()
-	channelplay.Play_Channel_Ctx_Close()
+	// channelplay.Play_Channel_Ctx_Close()
+	memlog_play.Play_MemLog()
 }
