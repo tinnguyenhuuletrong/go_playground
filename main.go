@@ -1,6 +1,8 @@
 package main
 
-import networktcp "ttin.com/play2022/network_tcp/play"
+import (
+	channelplay "ttin.com/play2022/channel_play"
+)
 
 func main() {
 	// network.Play()
@@ -13,5 +15,6 @@ func main() {
 
 	// faninout.Play_FanInOut()
 
-	networktcp.PlayTcpChannel()
+	// networktcp.PlayTcpChannel()
+	channelplay.Play_Channel_Ctx_Close()
 }
