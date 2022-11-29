@@ -1,8 +1,6 @@
 package main
 
-import (
-	memlog_play "ttin.com/play2022/memlog_play"
-)
+import "ttin.com/play2022/gob_play"
 
 func main() {
 	// network.Play()
@@ -17,5 +15,7 @@ func main() {
 
 	// networktcp.PlayTcpChannel()
 	// channelplay.Play_Channel_Ctx_Close()
-	memlog_play.Play_MemLog()
+	// memlog_play.Play_MemLog()
+
+	gob_play.Play_Gob()
 }
