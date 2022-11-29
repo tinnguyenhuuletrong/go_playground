@@ -52,12 +52,12 @@ func Play_Gob() {
 	enc.Encode(pikachu)
 	fmt.Println("gob encoded(hex):", "0x"+hex.EncodeToString(buffer.Bytes()))
 	fmt.Println("gob encoded(base64):", base64.RawStdEncoding.EncodeToString(buffer.Bytes()))
-	os.WriteFile("tmp/pika.gob", buffer.Bytes(), 0644)
-	fmt.Println("saved to:", "/tmp/pika.gob")
+	os.WriteFile("./tmp/pika.gob", buffer.Bytes(), 0644)
+	fmt.Println("saved to:", "tmp/pika.gob")
 
 	// Decode
-	fmt.Println("loaded from:", "/tmp/pika.gob")
-	fileBytes, err := os.ReadFile("tmp/pika.gob")
+	fmt.Println("loaded from:", "tmp/pika.gob")
+	fileBytes, err := os.ReadFile("./tmp/pika.gob")
 	if err != nil {
 		log.Panic(err)
 	}
