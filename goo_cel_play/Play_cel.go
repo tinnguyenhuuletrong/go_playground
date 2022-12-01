@@ -11,6 +11,7 @@ import (
 	"github.com/google/cel-go/cel"
 	"github.com/google/cel-go/common/types"
 	"github.com/google/cel-go/common/types/ref"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 // codelab: https://codelabs.developers.google.com/codelabs/cel-go
@@ -64,6 +65,8 @@ func test3_cusromFunc() {
 	`, cel.BoolType)
 	program, _ := env.Program(ast)
 
+	dumpAts2Json(ast)
+
 	// Evaluate a request object that sets the proper group claim.
 	eval(program, map[string]any{
 		"request": &RequestContext{
@@ -93,6 +96,9 @@ func test2_variable() {
 	ast := compile(env, `request.group == 'admin'
 	|| request.email == 'super@admin.universal'
 	`, cel.BoolType)
+
+	dumpAts2Json(ast)
+
 	program, _ := env.Program(ast)
 
 	// Evaluate a request object that sets the proper group claim.
@@ -121,7 +127,9 @@ func test1_simple(exp string) {
 	if err != nil {
 		log.Panic(err)
 	}
-	_, output, detail := doEvalAndRunExpWithEnv(exp, env)
+	ast, output, detail := doEvalAndRunExpWithEnv(exp, env)
+
+	dumpAts2Json(ast)
 
 	log.Printf("Res: %+v", map[string]any{
 		"output": output,
@@ -234,4 +242,13 @@ func report(result ref.Val, details *cel.EvalDetails, err error) {
 			fmt.Printf("%d: %v (%T)\n", id, v, v)
 		}
 	}
+}
+
+func dumpAts2Json(ats *cel.Ast) {
+	bytes, err := protojson.Marshal(ats.Expr())
+	if err != nil {
+		log.Panic(err)
+	}
+
+	fmt.Printf("JSON: %s\n", string(bytes))
 }
