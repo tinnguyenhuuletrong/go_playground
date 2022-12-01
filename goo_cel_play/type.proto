@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package play2022.goo_cel_play;
+option go_package = "goo_cel_play/";
+
+message requestContext {
+    string group = 1;
+    string email = 2;
+}

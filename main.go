@@ -1,6 +1,8 @@
 package main
 
-import "ttin.com/play2022/gob_play"
+import (
+	"ttin.com/play2022/goo_cel_play"
+)
 
 func main() {
 	// network.Play()
@@ -17,5 +19,5 @@ func main() {
 	// channelplay.Play_Channel_Ctx_Close()
 	// memlog_play.Play_MemLog()
 
-	gob_play.Play_Gob()
+	goo_cel_play.PlayCel()
 }
