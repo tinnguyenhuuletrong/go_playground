@@ -16,8 +16,11 @@ import (
 // codelab: https://codelabs.developers.google.com/codelabs/cel-go
 
 func PlayCel() {
-	// test1_simple(`"Hello Go"`)
-	// test2_variable()
+	fmt.Print("============================================\n \t play1 - hello \n============================================\n\n")
+	test1_simple(`"Hello Go"`)
+	fmt.Print("============================================\n \t play2 - with variable + proto struct \n============================================\n\n")
+	test2_variable()
+	fmt.Print("============================================\n \t play3 - with func \n============================================\n\n")
 	test3_cusromFunc()
 }
 
@@ -27,12 +30,12 @@ func test3_cusromFunc() {
 	typeParamA := cel.TypeParamType("A")
 
 	custom_str_endWiths := func(args ...ref.Val) ref.Val {
-		arg0 := strings.ToLower(string(args[0].(types.String)))
-		arg1 := strings.ToLower(string(args[1].(types.String)))
+		this := strings.ToLower(string(args[0].(types.String)))
+		inp := strings.ToLower(string(args[1].(types.String)))
 
-		fmt.Printf("custom_str_endWiths: this: %+v arg: %+v\n", arg0, arg1)
+		fmt.Printf("custom_str_endWiths: this: %+v inp: %+v\n", this, inp)
 
-		if strings.HasSuffix(arg0, arg1) {
+		if strings.HasSuffix(this, inp) {
 			return types.True
 		}
 
@@ -173,7 +176,7 @@ func compile(env *cel.Env, expr string, celType *cel.Type) *cel.Ast {
 		log.Fatalf(
 			"Got %v, wanted %v result type", ast.OutputType(), celType)
 	}
-	fmt.Printf("%s\n\n", strings.ReplaceAll(expr, "\t", " "))
+	fmt.Printf("EXP: %s\n\n", strings.ReplaceAll(expr, "\t", " "))
 	return ast
 }
 
