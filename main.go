@@ -1,7 +1,7 @@
 package main
 
 import (
-	"ttin.com/play2022/goo_cel_play"
+	"ttin.com/play2022/data_structure"
 )
 
 func main() {
@@ -19,5 +19,7 @@ func main() {
 	// channelplay.Play_Channel_Ctx_Close()
 	// memlog_play.Play_MemLog()
 
-	goo_cel_play.PlayCel()
+	// goo_cel_play.PlayCel()
+
+	data_structure.Play_Heap()
 }
