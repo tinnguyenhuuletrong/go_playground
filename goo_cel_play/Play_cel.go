@@ -7,11 +7,14 @@ import (
 	"reflect"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/google/cel-go/cel"
 	"github.com/google/cel-go/common/types"
 	"github.com/google/cel-go/common/types/ref"
 	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/structpb"
 )
 
 // codelab: https://codelabs.developers.google.com/codelabs/cel-go
@@ -22,11 +25,44 @@ func PlayCel() {
 	fmt.Print("============================================\n \t play2 - with variable + proto struct \n============================================\n\n")
 	test2_variable()
 	fmt.Print("============================================\n \t play3 - with func \n============================================\n\n")
-	test3_cusromFunc()
+	test3_customFunc()
+	fmt.Print("============================================\n \t play4 - with json gen \n============================================\n\n")
+	test4_jsonGen()
 }
 
-func test3_cusromFunc() {
+func test4_jsonGen() {
 
+	env, err := cel.NewEnv(
+		cel.Variable("now", cel.TimestampType),
+	)
+	if err != nil {
+		log.Panic(err.Error())
+	}
+
+	ast := compile(env, `
+		{'sub': 'serviceAccount:delegate@acme.co',
+		'aud': 'my-project',
+		'iss': 'auth.acme.com:12350',
+		'iat': now,
+		'nbf': now,
+		'exp': now + duration('300s'),
+		'extra_claims': {
+				'group': 'admin'
+		}}
+	`, cel.MapType(cel.StringType, cel.DynType))
+	program, _ := env.Program(ast)
+
+	dumpAts2Json(ast)
+
+	// Evaluate a request object that sets the proper group claim.
+	out, _, _ := eval(program, map[string]any{
+		"now": time.Now(),
+	})
+
+	log.Println(valueToJSON(out))
+}
+
+func test3_customFunc() {
 	// type-signature for 'endWiths'.
 	typeParamA := cel.TypeParamType("A")
 
@@ -251,4 +287,19 @@ func dumpAts2Json(ats *cel.Ast) {
 	}
 
 	fmt.Printf("JSON: %s\n", string(bytes))
+}
+
+// valueToJSON converts the CEL type to a protobuf JSON representation and
+// marshals the result to a string.
+func valueToJSON(val ref.Val) string {
+	v, err := val.ConvertToNative(reflect.TypeOf(&structpb.Value{}))
+	if err != nil {
+		log.Panic(err)
+	}
+	marshaller := protojson.MarshalOptions{Indent: "    "}
+	bytes, err := marshaller.Marshal(v.(proto.Message))
+	if err != nil {
+		log.Panic(err)
+	}
+	return string(bytes)
 }
