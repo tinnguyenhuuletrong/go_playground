@@ -1,7 +1,7 @@
 package main
 
 import (
-	"ttin.com/play2022/data_structure"
+	"ttin.com/play2022/network"
 )
 
 func main() {
@@ -21,5 +21,6 @@ func main() {
 
 	// goo_cel_play.PlayCel()
 
-	data_structure.Play_Heap()
+	// data_structure.Play_Heap()
+	network.Play_HTTP_Request()
 }
