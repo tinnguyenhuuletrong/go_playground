@@ -1,7 +1,7 @@
 package main
 
 import (
-	"ttin.com/play2022/network"
+	"ttin.com/play2022/io_play"
 )
 
 func main() {
@@ -22,5 +22,7 @@ func main() {
 	// goo_cel_play.PlayCel()
 
 	// data_structure.Play_Heap()
-	network.Play_HTTP_Request()
+	// network.Play_HTTP_Request()
+
+	io_play.Play_IO_WordCount()
 }
