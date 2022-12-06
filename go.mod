@@ -10,6 +10,7 @@ require (
 require (
 	github.com/antlr/antlr4/runtime/Go/antlr v0.0.0-20220418222510-f25a4f6275ed // indirect
 	github.com/benbjohnson/clock v1.3.0 // indirect
+	github.com/golang/snappy v0.0.4 // indirect
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stoewer/go-strcase v1.2.0 // indirect
@@ -37,6 +38,7 @@ require (
 	github.com/googleapis/gax-go/v2 v2.5.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/spf13/cobra v1.6.1
+	github.com/syndtr/goleveldb v1.0.0
 	github.com/tidwall/wal v1.1.7
 	github.com/twitchtv/twirp v8.1.3+incompatible
 	go.opencensus.io v0.23.0 // indirect

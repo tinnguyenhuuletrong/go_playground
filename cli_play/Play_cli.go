@@ -1,10 +1,13 @@
 package cli_play
 
 import (
+	"bytes"
+	"encoding/gob"
 	"encoding/json"
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/syndtr/goleveldb/leveldb"
 )
 
 type user struct {
@@ -19,26 +22,75 @@ func newUser(id, email string) *user {
 	}
 }
 
-var allUsers []user = []user{
+var seedUsers []user = []user{
 	*newUser("1", "a@email.com"),
 	*newUser("2", "b@email.com"),
 	*newUser("3", "c@email.com"),
 	*newUser("4", "d@email.com"),
 }
 
+type datastore struct {
+	db       *leveldb.DB
+	allUsers []user
+}
+
+func newDatastore() *datastore {
+	ins := &datastore{
+		allUsers: seedUsers,
+	}
+	ins.open()
+	return ins
+}
+
+func (ins *datastore) open() {
+	db, err := leveldb.OpenFile("./tmp/cli-db", nil)
+	if err != nil {
+		panic(err)
+	}
+	ins.db = db
+}
+func (ins *datastore) close() {
+	ins.db.Close()
+}
+
+func (ins *datastore) save() {
+	userKey := []byte("users")
+	ins.db.Put(userKey, dump2Gob(ins.allUsers), nil)
+}
+
+func (ins *datastore) loadData() {
+	userKey := []byte("users")
+	val, err := ins.db.Get(userKey, nil)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	if len(val) > 0 {
+		ins.allUsers = gob2Obj[[]user](val)
+	}
+}
+
 func Play_cli_cobra() {
+	datastore := newDatastore()
+	datastore.loadData()
+	defer func() {
+		datastore.save()
+		datastore.close()
+	}()
+
 	var rootCmd = &cobra.Command{
 		Use:   "app",
 		Short: "My root command",
 	}
 
-	usersCmd := buildCmdUsers()
+	usersCmd := buildCmdUsers(datastore)
 
 	rootCmd.AddCommand(usersCmd)
 	rootCmd.Execute()
 }
 
-func buildCmdUsers() *cobra.Command {
+func buildCmdUsers(store *datastore) *cobra.Command {
 	var usersCmd = &cobra.Command{
 		Use:                   "users",
 		Short:                 "User resources",
@@ -57,9 +109,9 @@ func buildCmdUsers() *cobra.Command {
 
 			switch fFormat {
 			case "json":
-				fmt.Println(dump2Json(allUsers))
+				fmt.Println(dump2Json(store.allUsers))
 			default:
-				fmt.Println(allUsers)
+				fmt.Println(store.allUsers)
 			}
 
 		},
@@ -73,9 +125,9 @@ func buildCmdUsers() *cobra.Command {
 			fEmail := cmd.Flags().Lookup("email").Value.String()
 			fmt.Printf("Inside userAdd Run with args: %v, flags: %v\n", args, fEmail)
 
-			id := fmt.Sprintf("%d", len(allUsers))
+			id := fmt.Sprintf("%d", len(store.allUsers)+1)
 			newIns := *newUser(id, fEmail)
-			allUsers = append(allUsers, newIns)
+			store.allUsers = append(store.allUsers, newIns)
 
 			fmt.Printf("added: %+v\n", newIns)
 		},
@@ -94,4 +146,25 @@ func dump2Json(v any) string {
 		panic(err)
 	}
 	return string(bytes)
+}
+
+func dump2Gob(v any) []byte {
+	var buffer bytes.Buffer
+	enc := gob.NewEncoder(&buffer)
+	err := enc.Encode(v)
+	if err != nil {
+		panic(err)
+	}
+	return buffer.Bytes()
+}
+
+func gob2Obj[T any](buffer []byte) T {
+	reader := bytes.NewReader(buffer)
+	dec := gob.NewDecoder(reader)
+	var obj T
+	err := dec.Decode(&obj)
+	if err != nil {
+		panic(err)
+	}
+	return obj
 }
