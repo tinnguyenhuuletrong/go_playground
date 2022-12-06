@@ -1,13 +1,12 @@
 package cli_play
 
 import (
-	"bytes"
-	"encoding/gob"
-	"encoding/json"
 	"fmt"
 
 	"github.com/spf13/cobra"
 	"github.com/syndtr/goleveldb/leveldb"
+
+	"ttin.com/play2022/utils"
 )
 
 type user struct {
@@ -55,7 +54,7 @@ func (ins *datastore) close() {
 
 func (ins *datastore) save() {
 	userKey := []byte("users")
-	ins.db.Put(userKey, dump2Gob(ins.allUsers), nil)
+	ins.db.Put(userKey, utils.Dump2Gob(ins.allUsers), nil)
 }
 
 func (ins *datastore) loadData() {
@@ -67,7 +66,7 @@ func (ins *datastore) loadData() {
 	}
 
 	if len(val) > 0 {
-		ins.allUsers = gob2Obj[[]user](val)
+		ins.allUsers = utils.Gob2Obj[[]user](val)
 	}
 }
 
@@ -109,7 +108,7 @@ func buildCmdUsers(store *datastore) *cobra.Command {
 
 			switch fFormat {
 			case "json":
-				fmt.Println(dump2Json(store.allUsers))
+				fmt.Println(utils.Dump2Json(store.allUsers))
 			default:
 				fmt.Println(store.allUsers)
 			}
@@ -138,33 +137,4 @@ func buildCmdUsers(store *datastore) *cobra.Command {
 	usersCmd.AddCommand(userList)
 	usersCmd.AddCommand(userAdd)
 	return usersCmd
-}
-
-func dump2Json(v any) string {
-	bytes, err := json.MarshalIndent(v, " ", "  ")
-	if err != nil {
-		panic(err)
-	}
-	return string(bytes)
-}
-
-func dump2Gob(v any) []byte {
-	var buffer bytes.Buffer
-	enc := gob.NewEncoder(&buffer)
-	err := enc.Encode(v)
-	if err != nil {
-		panic(err)
-	}
-	return buffer.Bytes()
-}
-
-func gob2Obj[T any](buffer []byte) T {
-	reader := bytes.NewReader(buffer)
-	dec := gob.NewDecoder(reader)
-	var obj T
-	err := dec.Decode(&obj)
-	if err != nil {
-		panic(err)
-	}
-	return obj
 }
