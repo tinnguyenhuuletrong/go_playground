@@ -1,8 +1,6 @@
 package main
 
-import (
-	"ttin.com/play2022/cli_play"
-)
+import "ttin.com/play2022/pprof_play"
 
 func main() {
 	// network.Play()
@@ -26,5 +24,7 @@ func main() {
 
 	// io_play.Play_IO_WordCount()
 
-	cli_play.Play_cli_cobra()
+	// cli_play.Play_cli_cobra()
+
+	pprof_play.Leaky_Play()
 }
