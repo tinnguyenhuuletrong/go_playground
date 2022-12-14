@@ -1,7 +1,7 @@
 package main
 
 import (
-	"ttin.com/play2022/error_play"
+	"ttin.com/play2022/raft_dragonboat_play"
 )
 
 func main() {
@@ -31,5 +31,7 @@ func main() {
 	// pprof_play.Leaky_Play()
 
 	// error_play.Play_Error_Wrap_UnWrap()
-	error_play.Play_Organize_HTTP_Error()
+	// error_play.Play_Organize_HTTP_Error()
+
+	raft_dragonboat_play.Play_Simple()
 }
