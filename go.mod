@@ -59,6 +59,7 @@ require (
 	cloud.google.com/go/profiler v0.3.0 // indirect
 	cloud.google.com/go/storage v1.26.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/edsrzf/mmap-go v1.1.0
 	github.com/embano1/memlog v0.4.3
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect

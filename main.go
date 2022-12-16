@@ -1,7 +1,7 @@
 package main
 
 import (
-	"ttin.com/play2022/raft_dragonboat_play"
+	"ttin.com/play2022/mmap_play"
 )
 
 func main() {
@@ -33,5 +33,7 @@ func main() {
 	// error_play.Play_Error_Wrap_UnWrap()
 	// error_play.Play_Organize_HTTP_Error()
 
-	raft_dragonboat_play.Play_Simple()
+	// raft_dragonboat_play.Play_Simple()
+
+	mmap_play.Play_mmap()
 }
