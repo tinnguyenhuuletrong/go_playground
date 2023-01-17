@@ -1,6 +1,8 @@
 package main
 
-import "ttin.com/play2022/conc_play"
+import (
+	"ttin.com/play2022/gzip_play"
+)
 
 func main() {
 	// network.Play()
@@ -39,7 +41,9 @@ func main() {
 
 	// pebble_play.Pebble_Db_Play()
 
-	conc_play.Conc_BetterWaitGroup_Play()
-	conc_play.Conc_LimitedWorkerPool_Play()
-	conc_play.Conc_Iter_Play()
+	// conc_play.Conc_BetterWaitGroup_Play()
+	// conc_play.Conc_LimitedWorkerPool_Play()
+	// conc_play.Conc_Iter_Play()
+
+	gzip_play.Gzip_Play()
 }
