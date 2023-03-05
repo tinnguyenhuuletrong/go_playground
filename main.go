@@ -1,7 +1,7 @@
 package main
 
 import (
-	"ttin.com/play2022/gzip_play"
+	"ttin.com/play2022/gnark_play"
 )
 
 func main() {
@@ -45,5 +45,7 @@ func main() {
 	// conc_play.Conc_LimitedWorkerPool_Play()
 	// conc_play.Conc_Iter_Play()
 
-	gzip_play.Gzip_Play()
+	// gzip_play.Gzip_Play()
+
+	gnark_play.Play_Gnark_Simple()
 }
