@@ -9,6 +9,7 @@ import (
 	"github.com/consensys/gnark/backend/groth16"
 	"github.com/consensys/gnark/frontend"
 	"github.com/consensys/gnark/frontend/cs/r1cs"
+	"ttin.com/play2022/utils"
 )
 
 // CubicCircuit defines a simple circuit
@@ -35,7 +36,6 @@ func Play_Gnark_Simple() {
 	ccs, _ := frontend.Compile(ecc.BN254.ScalarField(), r1cs.NewBuilder, &circuit)
 
 	// groth16 zkSNARK: Setup
-	log.Println("Setup:")
 	pk, vk, _ := groth16.Setup(ccs)
 
 	// witness definition
@@ -44,8 +44,11 @@ func Play_Gnark_Simple() {
 	witness, _ := frontend.NewWitness(&assignment, ecc.BN254.ScalarField())
 	publicWitness, _ := witness.Public()
 
-	log.Println("Prove & Verify:")
 	// groth16: Prove & Verify
 	proof, _ := groth16.Prove(ccs, pk, witness)
+
+	pubDataMsg := map[string]any{"proof": proof, "verifyingKey": vk, "publicWitness": publicWitness}
+	log.Println("Prove & Verify:", utils.Dump2JsonInline(pubDataMsg))
+
 	groth16.Verify(proof, vk, publicWitness)
 }
