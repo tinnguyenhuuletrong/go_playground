@@ -1,8 +1,6 @@
 package main
 
-import (
-	"ttin.com/play2022/gnark_play"
-)
+import "ttin.com/play2022/polygonid_play"
 
 func main() {
 	// network.Play()
@@ -47,5 +45,7 @@ func main() {
 
 	// gzip_play.Gzip_Play()
 
-	gnark_play.Play_Gnark_Simple()
+	// gnark_play.Play_Gnark_Simple()
+
+	polygonid_play.Issuer_Protocol()
 }
