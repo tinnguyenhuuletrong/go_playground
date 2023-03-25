@@ -1,6 +1,6 @@
 package main
 
-import "ttin.com/play2022/polygonid_play"
+import "ttin.com/play2022/grammar_play"
 
 func main() {
 	// network.Play()
@@ -47,5 +47,7 @@ func main() {
 
 	// gnark_play.Play_Gnark_Simple()
 
-	polygonid_play.Issuer_Protocol()
+	// polygonid_play.Issuer_Protocol()
+
+	grammar_play.Play_INI_Parser()
 }
