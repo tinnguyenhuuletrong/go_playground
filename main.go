@@ -1,6 +1,8 @@
 package main
 
-import "ttin.com/play2022/grammar_play"
+import (
+	ModuleXPlay "ttin.com/play2022/module_opt_play/play"
+)
 
 func main() {
 	// network.Play()
@@ -49,5 +51,7 @@ func main() {
 
 	// polygonid_play.Issuer_Protocol()
 
-	grammar_play.Play_INI_Parser()
+	// grammar_play.Play_INI_Parser()
+
+	ModuleXPlay.Play()
 }
