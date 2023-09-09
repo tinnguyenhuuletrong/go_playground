@@ -1,7 +1,7 @@
 package main
 
 import (
-	ModuleXPlay "ttin.com/play2022/module_opt_play/play"
+	"ttin.com/play2022/fiber_play"
 )
 
 func main() {
@@ -53,5 +53,7 @@ func main() {
 
 	// grammar_play.Play_INI_Parser()
 
-	ModuleXPlay.Play()
+	// ModuleXPlay.Play()
+
+	fiber_play.Fiber_Play()
 }
