@@ -1,7 +1,7 @@
 package main
 
 import (
-	"ttin.com/play2022/fiber_play"
+	httpserverplay "ttin.com/play2022/http_server_play"
 )
 
 func main() {
@@ -55,5 +55,7 @@ func main() {
 
 	// ModuleXPlay.Play()
 
-	fiber_play.Fiber_Play()
+	// fiber_play.Fiber_Play()
+
+	httpserverplay.PlayHttpServer()
 }
