@@ -1,7 +1,7 @@
 package main
 
 import (
-	httpserverplay "ttin.com/play2022/http_server_play"
+	play_jsonprc "ttin.com/play2022/json_prc"
 )
 
 func main() {
@@ -57,5 +57,8 @@ func main() {
 
 	// fiber_play.Fiber_Play()
 
-	httpserverplay.PlayHttpServer()
+	// httpserverplay.PlayHttpServer()
+
+	// play_jsonprc.PlayJsonRpc_WSServer()
+	play_jsonprc.PlayJsonRpc_Stdio()
 }
